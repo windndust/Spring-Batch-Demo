@@ -6,6 +6,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
@@ -57,7 +58,8 @@ public class SpringBatchConfiguration {
 	}
 	
 	@Bean
-	public FlatFileItemReader<User> itemReader(@Value("${input}") Resource resource){		
+	@StepScope
+	public FlatFileItemReader<User> itemReader(@Value("#{jobParameters['input']}") Resource resource){		
 		FlatFileItemReader<User> flatFileItemReader = new FlatFileItemReader<>();
 		flatFileItemReader.setResource(resource);
 		flatFileItemReader.setName("CSV-Reader");
