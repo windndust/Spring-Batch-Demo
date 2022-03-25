@@ -1,5 +1,9 @@
 package org.mneidinger.SpringBatchDemo.batch;
 
+import java.util.List;
+
+import org.mneidinger.SpringBatchDemo.jpa.model.ChildUser;
+import org.mneidinger.SpringBatchDemo.jpa.model.SuperUser;
 import org.mneidinger.SpringBatchDemo.jpa.model.User;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -7,9 +11,14 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.step.builder.SimpleStepBuilder;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.NonTransientResourceException;
+import org.springframework.batch.item.ParseException;
+import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -37,6 +46,37 @@ public class SpringBatchConfiguration {
 						.processor(itemProcessor)
 						.writer(itemWriter)
 						.build();
+		
+		
+		
+		{
+			StepBuilder sb = stepBuilderFactory.get("hello");
+			SimpleStepBuilder<User, User> ssb = sb.<User, User>chunk(10);
+			
+			ssb.reader(new ItemReader<ChildUser>() {
+				@Override
+				public ChildUser read()
+						throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+					// TODO Auto-generated method stub
+					return null;
+				}			
+			});
+			
+			ssb.processor(new ItemProcessor<SuperUser, ChildUser>(){
+				@Override
+				public ChildUser process(SuperUser item) throws Exception {
+					// TODO Auto-generated method stub
+					return null;
+				}				
+			});
+			ssb.writer(new ItemWriter<SuperUser>(){
+				@Override
+				public void write(List<? extends SuperUser> items) throws Exception {
+					// TODO Auto-generated method stub
+					
+				}				
+			});
+		}
 		
 		
 		//Extract, transform, load (ETL) 
